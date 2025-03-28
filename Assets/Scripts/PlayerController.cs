@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     public float speed = 5.0f;
     private float horizontalInput;
     private float forwardInput;
+    public float hp = 5f;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -21,4 +22,26 @@ public class PlayerController : MonoBehaviour
         transform.Translate(forwardInput * speed * Time.deltaTime * Vector3.forward);
         transform.Translate(horizontalInput* speed * Time.deltaTime * Vector3.right);
     }
+   
+    void OnCollisionEnter(Collision EnemyCollision)
+    {
+        if (EnemyCollision.gameObject.CompareTag("Enemy"))
+        {
+            hp -= 1;
+            if (hp <= 0)
+            {
+                OnGameOver();
+            }
+        }
+    }
+    void OnGameOver()
+    {
+        SpawnController spawnController = FindObjectOfType<SpawnController>();
+        if (spawnController != null)
+        {
+            spawnController.GameOver();
+        }
+    }
+
+    
 }
